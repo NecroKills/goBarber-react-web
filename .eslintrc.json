@@ -30,9 +30,12 @@
   ],
   "rules": {
     "prettier/prettier": "error",
+    "react/jsx-props-no-spreading": "off",
     "react-hooks/rules-of-hooks":"error",
+    "react/prop-types": "off",
     "react-hooks/exhaustive-deps": "warn",
     "react/jsx-one-expression-per-line": "off",
+    "no-unused-expressions": "off",
     "react/jsx-filename-extension": [1, {"extensions": [".tsx"]}],
     "import/prefer-default-export": "off",
     "@typescript-eslint/explicit-function-return-type": [
