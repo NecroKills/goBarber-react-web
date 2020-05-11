@@ -9,6 +9,7 @@ interface SignInCredentials {
 interface AuthContextData {
   user: object;
   signIn(credentials: SignInCredentials): Promise<void>;
+  signOut(): void;
 }
 
 interface AuthState {
@@ -19,7 +20,6 @@ interface AuthState {
 // Criando o contexto.
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-//
 const AuthProvider: React.FC = ({ children }) => {
   // Essa logica só vai ser executada quando o usuario der um refresh na pagina
   // ou quando ele sair e voltar pro sistema etc
@@ -52,8 +52,17 @@ const AuthProvider: React.FC = ({ children }) => {
     setData({ token, user });
   }, []);
 
+  const signOut = useCallback(() => {
+    // remove os dois dados do localStorage
+    localStorage.removeItem('@GoBarber:token');
+    localStorage.removeItem('@GoBarber:user');
+
+    // Seta com objeto vazio onde esta setado o user e o token
+    setData({} as AuthState);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn }}>
+    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
