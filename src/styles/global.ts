@@ -13,12 +13,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-border-style, input, button {
-  font: 16px 'Roboto Slab', sans-serif,
+body, input, button {
+  font-size: 16px;
+  font-family: 'Roboto Slab', sans-serif;
 }
 
 border-style, -moz-user-input, button {
-  font: 16px Roboto, sans-serif,
+  font: 16px Roboto Slab, sans-serif,
 }
 
 h1,h2,h3,h4,h5,h6, strong {
