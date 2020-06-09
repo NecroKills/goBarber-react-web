@@ -80,7 +80,12 @@ const Dashboard: React.FC = () => {
         },
       })
       .then(response => {
-        setAppointments(response.data);
+        const appointmentsFormatted = response.data.map(appointment => ({
+          ...appointment,
+          hourFormatted: format(parseISO(appointment.date), 'HH:mm'),
+        }));
+
+        setAppointments(appointmentsFormatted);
       });
   }, [selectedDate]);
 
@@ -102,6 +107,18 @@ const Dashboard: React.FC = () => {
   const selectedWeekDay = useMemo(() => {
     return format(selectedDate, 'cccc', { locale: ptBR });
   }, [selectedDate]);
+
+  const morningAppointments = useMemo(() => {
+    return appointments.filter(appointment => {
+      return parseISO(appointment.date).getHours() < 12;
+    });
+  }, [appointments]);
+
+  const afternoonAppointments = useMemo(() => {
+    return appointments.filter(appointment => {
+      return parseISO(appointment.date).getHours() >= 12;
+    });
+  }, [appointments]);
 
   return (
     <Container>
@@ -147,35 +164,59 @@ const Dashboard: React.FC = () => {
           <Section>
             <strong>Manhã</strong>
 
-            <Appointment>
-              <span>
-                <FiClock />
-                02:00
-              </span>
-              <div>
-                <img
-                  src="https://api.adorable.io/avatars/80/abott@adorable.io.png"
-                  alt="oi"
-                />
-              </div>
-            </Appointment>
+            {morningAppointments.length === 0 && (
+              <p>Nenhum agendamento neste período</p>
+            )}
+
+            {morningAppointments.map(appointment => (
+              <Appointment key={appointment.id}>
+                <span>
+                  <FiClock size={20} />
+                  {appointment.hourFormatted}
+                </span>
+
+                <div>
+                  <img
+                    src={
+                      appointment.user.avatar_url ||
+                      'https://api.adorable.io/avatars/56/abott@adorable.io.png'
+                    }
+                    alt={appointment.user.name}
+                  />
+
+                  <strong>{appointment.user.name}</strong>
+                </div>
+              </Appointment>
+            ))}
           </Section>
 
           <Section>
             <strong>Tarde</strong>
 
-            <Appointment>
-              <span>
-                <FiClock />
-                16:00
-              </span>
-              <div>
-                <img
-                  src="https://api.adorable.io/avatars/80/abott@adorable.io.png"
-                  alt="oi"
-                />
-              </div>
-            </Appointment>
+            {morningAppointments.length === 0 && (
+              <p>Nenhum agendamento neste período</p>
+            )}
+
+            {afternoonAppointments.map(appointment => (
+              <Appointment key={appointment.id}>
+                <span>
+                  <FiClock size={20} />
+                  {appointment.hourFormatted}
+                </span>
+
+                <div>
+                  <img
+                    src={
+                      appointment.user.avatar_url ||
+                      'https://api.adorable.io/avatars/56/abott@adorable.io.png'
+                    }
+                    alt={appointment.user.name}
+                  />
+
+                  <strong>{appointment.user.name}</strong>
+                </div>
+              </Appointment>
+            ))}
           </Section>
         </Schedule>
         <Calendar>
