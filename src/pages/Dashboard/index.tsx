@@ -120,13 +120,25 @@ const Dashboard: React.FC = () => {
     });
   }, [appointments]);
 
+  const nextAppointment = useMemo(() => {
+    return appointments.find(appointment =>
+      isAfter(parseISO(appointment.date), new Date()),
+    );
+  }, [appointments]);
+
   return (
     <Container>
       <Header>
         <HeaderContent>
           <img src={logoImg} alt="GoBarber" />
           <Profile>
-            <img src={user.avatar_url} alt={user.name} />
+            <img
+              src={
+                user.avatar_url ||
+                'https://api.adorable.io/avatars/56/abott@adorable.io.png'
+              }
+              alt={user.name}
+            />
             <div>
               <span>Bem-vindo,</span>
               <strong>{user.name}</strong>
@@ -146,20 +158,26 @@ const Dashboard: React.FC = () => {
             <span>{selectedWeekDay}</span>
           </p>
 
-          <NextAppointment>
-            <strong>Atendimento a seguir</strong>
-            <div>
-              <img
-                src="https://api.adorable.io/avatars/80/abott@adorable.io.png"
-                alt="oi"
-              />
-              <strong>Maycon</strong>
-              <span>
-                <FiClock />
-                08:00
-              </span>
-            </div>
-          </NextAppointment>
+          {isToday(selectedDate) && nextAppointment && (
+            <NextAppointment>
+              <strong>Agendamento a seguir</strong>
+              <div>
+                <img
+                  src={
+                    nextAppointment.user.avatar_url ||
+                    'https://api.adorable.io/avatars/80/abott@adorable.io.png'
+                  }
+                  alt={nextAppointment.user.name}
+                />
+
+                <strong>{nextAppointment.user.name}</strong>
+                <span>
+                  <FiClock size={24} />
+                  {nextAppointment.hourFormatted}
+                </span>
+              </div>
+            </NextAppointment>
+          )}
 
           <Section>
             <strong>Manhã</strong>
@@ -189,11 +207,10 @@ const Dashboard: React.FC = () => {
               </Appointment>
             ))}
           </Section>
-
           <Section>
             <strong>Tarde</strong>
 
-            {morningAppointments.length === 0 && (
+            {afternoonAppointments.length === 0 && (
               <p>Nenhum agendamento neste período</p>
             )}
 
