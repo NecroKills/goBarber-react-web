@@ -36,7 +36,7 @@ describe('SignIn Page', () => {
     mockedHistoryPush.mockClear();
   });
 
-  it('should be able to sign in', async () => {
+  it('should be able to sign inn', async () => {
     const { getByPlaceholderText, getByText } = render(<SignIn />);
 
     const emailField = getByPlaceholderText('E-mail');
