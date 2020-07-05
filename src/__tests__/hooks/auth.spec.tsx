@@ -46,6 +46,7 @@ describe('Auth hook', () => {
   });
 
   it('should restore saved data from storage when auth inits', () => {
+    // Sempre que o getItem é chamado ele mocka os valores.
     jest.spyOn(Storage.prototype, 'getItem').mockImplementation(key => {
       switch (key) {
         case '@GoBarber:token':
